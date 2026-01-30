@@ -588,8 +588,9 @@ saveLocationBtn.addEventListener("click", () => {
             condition: condition,
             bg: cleanBg,
             timezone_offset: window.lastFetchedCurrent?.timezone_offset || 0,
-            timezone: window.lastFetchedCurrent?.timezone || "", // Save timezone name
-            date: new Date().toLocaleDateString()
+            timezone: window.lastFetchedCurrent?.timezone || "", 
+            date: new Date().toLocaleDateString(),
+            icon: window.lastFetchedCurrent?.weather[0]?.icon || "01d"
         };
 
         savedLocations.push(newLoc);
@@ -621,6 +622,7 @@ navItems.forEach(item => {
             if(weatherDetailsMobile) weatherDetailsMobile.classList.remove('hidden');
             if(rightPanel) rightPanel.classList.remove('hidden');
             if(divider) divider.classList.remove('hidden');
+            if(heartBtn) heartBtn.classList.remove('hidden');
 
             // Ensure search bar and heart are visible/enabled if needed
         } else if (navText === 'Saved Location') {
@@ -653,6 +655,23 @@ function renderSavedLocations() {
         card.className = "saved-card";
         
         const localTime = getLocalTime(loc.timezone_offset, loc.timezone);
+        
+        let iconCode = loc.icon;
+        if (!iconCode) {
+            // Fallback for old saved locations without icon code
+            const cond = (loc.condition || "").toLowerCase();
+            if (cond.includes("clear")) iconCode = "01d";
+            else if (cond.includes("few clouds")) iconCode = "02d";
+            else if (cond.includes("clouds")) iconCode = "03d";
+            else if (cond.includes("shower") || cond.includes("drizzle")) iconCode = "09d";
+            else if (cond.includes("rain")) iconCode = "10d";
+            else if (cond.includes("thunder")) iconCode = "11d";
+            else if (cond.includes("snow")) iconCode = "13d";
+            else if (cond.includes("mist") || cond.includes("fog") || cond.includes("haze")) iconCode = "50d";
+            else iconCode = "01d";
+        }
+
+        const iconFile = iconMap[iconCode] || "day-sunny-color-icon.svg";
 
         card.innerHTML = `
             <img src="${loc.bg}" class="saved-card-bg" alt="Weather Background">
@@ -661,7 +680,10 @@ function renderSavedLocations() {
                 <div class="saved-card-header">
                     <div class="saved-info">
                         <h3>${loc.name}</h3>
-                        <p>${loc.condition}</p>
+                        <div class="saved-condition-row">
+                             <img src="assets/weatherIcons/${iconFile}" class="saved-weather-icon" alt="Icon">
+                             <p>${loc.condition}</p>
+                        </div>
                         <span class="saved-time">${localTime}</span>
                     </div>
                     <button class="delete-saved-btn" onclick="event.stopPropagation(); removeSavedLocation(${loc.id})">

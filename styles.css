@@ -811,6 +811,19 @@ body {
 .empty-state.hidden {
     display: none;
 }
+
+.saved-condition-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 5px;
+}
+
+.saved-weather-icon {
+    width: 24px;
+    height: 24px;
+}
+
 .weather-details-panel-600{
     display: none;
 }
