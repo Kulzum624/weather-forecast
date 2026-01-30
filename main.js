@@ -15,7 +15,7 @@ const currentIconEl = document.getElementById("current-icon");
 // Gauges Elements
 const windArrow = document.getElementById("wind-dot-container");
 const windDirText = document.getElementById("wind-dir-text");
-const speedNeedle = document.getElementById("speed-needle");
+const speedNeedle = document.getElementById("speed-needle-container");
 const windSpeedText = document.getElementById("wind-speed");
 
 // Forecast
@@ -210,39 +210,61 @@ function updateUI(data) {
 
     switch(true){
         case (windDeg >= 0 && windDeg <= 20 || windDeg >= 340 && windDeg <= 359):
-            windArrow.style.transform = `rotate(${windDeg+10}deg)`;
+            windArrow.style.transform = `rotate(${windDeg-1}deg)`;
             break;
-        case (windDeg >= 21 && windDeg <= 40 || windDeg >= 320 && windDeg <= 339):
-            windArrow.style.transform = `rotate(${windDeg+10}deg) translateY(-1px)`;
-            break;            
+        case (windDeg >= 21 && windDeg <= 40):
+            windArrow.style.transform = `rotate(${windDeg+5}deg) translateY(-1px)`;
+            break;
+        case(windDeg >= 320 && windDeg <= 339):
+            windArrow.style.transform = `rotate(${windDeg-5}deg) translateY(-2.5px)`;
+            break;
         case (windDeg >= 41 && windDeg <= 60):
-            windArrow.style.transform = `rotate(${windDeg+10}deg) translateY(-4px)`;
+            windArrow.style.transform = `rotate(${windDeg+10}deg) translateY(-7px)`;
             break;
         case(windDeg >= 300 && windDeg <= 319):
-            windArrow.style.transform = `rotate(${windDeg+10}deg) translateY(-2.8px)`;
+            windArrow.style.transform = `rotate(${windDeg-8}deg) translateY(-6px)`;
             break;
-        case (windDeg >= 61 && windDeg <= 80 || windDeg >= 280 && windDeg <= 299):
-            windArrow.style.transform = `rotate(${windDeg+10}deg) translateY(-6px)`;
+        case (windDeg >= 61 && windDeg <= 80):
+            windArrow.style.transform = `rotate(${windDeg+7}deg) translateY(-9px)`;
             break;
-        case (windDeg >= 81 && windDeg <= 100 || windDeg >= 260 && windDeg <= 279):
-            windArrow.style.transform = `rotate(${windDeg+10}deg) translateY(-11px)`;
+        case(windDeg >= 280 && windDeg <= 299):
+            windArrow.style.transform = `rotate(${windDeg-10}deg) translateY(-9px)`;
             break;
-        case (windDeg >= 101 && windDeg <= 120 || windDeg >= 240 && windDeg <= 259):
-            windArrow.style.transform = `rotate(${windDeg+10}deg) translateY(-13px)`;
+        case (windDeg >= 81 && windDeg <= 100):
+            windArrow.style.transform = `rotate(${windDeg+8}deg) translateY(-13px)`;
             break;
-        case (windDeg >= 121 && windDeg <= 140 || windDeg >= 220 && windDeg <= 239):
-            windArrow.style.transform = `rotate(${windDeg+10}deg) translateY(-16px)`;
+        case(windDeg >= 260 && windDeg <= 279):
+            windArrow.style.transform = `rotate(${windDeg-11}deg) translateY(-13px)`;
             break;
-        case (windDeg >= 141 && windDeg <= 160 || windDeg >= 200 && windDeg <= 219):
-            windArrow.style.transform = `rotate(${windDeg+10}deg) translateY(-19px)`;
+        case (windDeg >= 101 && windDeg <= 120):
+            windArrow.style.transform = `rotate(${windDeg+7}deg) translateY(-16px)`;
             break;
-        case (windDeg >= 161 && windDeg <= 180 || windDeg >= 181 && windDeg <= 199):
-            windArrow.style.transform = `rotate(${windDeg}deg) translateY(-20px)`;
+        case(windDeg >= 240 && windDeg <= 259):
+            windArrow.style.transform = `rotate(${windDeg-7}deg) translateY(-16px)`;
+            break;
+        case (windDeg >= 121 && windDeg <= 140):
+            windArrow.style.transform = `rotate(${windDeg+7}deg) translateY(-19px)`;
+            break;
+        case(windDeg >= 220 && windDeg <= 239):
+            windArrow.style.transform = `rotate(${windDeg-6}deg) translateY(-19px)`;
+            break;
+        case (windDeg >= 141 && windDeg <= 160 ):
+            windArrow.style.transform = `rotate(${windDeg+5}deg) translateY(-21px)`;
+            break;
+        case(windDeg >= 200 && windDeg <= 219):
+            windArrow.style.transform = `rotate(${windDeg-4}deg) translateY(-21px)`;
+            break;
+        case (windDeg >= 161 && windDeg <= 180):
+            windArrow.style.transform = `rotate(${windDeg+2}deg) translateY(-22px)`;
+            break;
+        case(windDeg >= 181 && windDeg <= 199):
+            windArrow.style.transform = `rotate(${windDeg-3}deg) translateY(-22px)`;
             break;
         default:
             windArrow.style.transform = `rotate(${windDeg+10}deg)`;
             break;
     }
+
     windDirText.textContent = windDeg;
 
     // Wind Speed
@@ -286,7 +308,7 @@ function updateUI(data) {
     const uvi = current.uvi || 0;
     const uvDesc = getUVDescription(uvi);
 
-    // Weather Details Panel Updates
+    // Weather Details Panel Updates (Desktop)
     document.getElementById('detail-humidity').textContent = `${current.humidity}%`;
     document.getElementById('detail-pressure').textContent = `${current.pressure} hPa`;
     document.getElementById('detail-rain').textContent = `${pop}%`;
@@ -296,6 +318,31 @@ function updateUI(data) {
     document.getElementById('detail-clouds').textContent = `${current.clouds}%`;
     document.getElementById('detail-dew').textContent = `${Math.round(current.dew_point)}°`;
     document.getElementById('detail-precipitation').textContent = `${current.pop}%`;
+
+    // Weather Details Panel Updates (Mobile)
+    const humidity600 = document.getElementById('detail-humidity-600');
+    if (humidity600) humidity600.textContent = `${current.humidity}%`;
+
+    const pressure600 = document.getElementById('detail-pressure-600');
+    if (pressure600) pressure600.textContent = `${current.pressure} hPa`;
+
+    const rain600 = document.getElementById('detail-rain-600');
+    if (rain600) rain600.textContent = `${pop}%`;
+
+    const uv600 = document.getElementById('detail-uv-600');
+    if (uv600) uv600.textContent = `${Math.round(uvi)} (${uvDesc})`;
+
+    const visibility600 = document.getElementById('detail-visibility-600');
+    if (visibility600) visibility600.textContent = `${(current.visibility / 1000).toFixed(1)} km`;
+
+    const clouds600 = document.getElementById('detail-clouds-600');
+    if (clouds600) clouds600.textContent = `${current.clouds}%`;
+    
+    const dew600 = document.getElementById('detail-dew-600');
+    if (dew600) dew600.textContent = `${Math.round(current.dew_point)}°`;
+
+    const precip600 = document.getElementById('detail-precipitation-600');
+    if (precip600) precip600.textContent = `${current.pop}%`;
 
     // Background Logic (Weather Card)
     const condition = current.weather[0].main.toLowerCase();
@@ -351,10 +398,51 @@ function updateUI(data) {
 const navToggleBtn = document.getElementById('nav-toggle');
 const sidebarNav = document.getElementById('sidebar-nav');
 const weatherDetailsPanel = document.getElementById('weather-details-panel');
-let isNavOpen = false; // Default state
+const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+const sidebar = document.querySelector('.sidebar');
+const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+let isNavOpen = false; // Default state for desktop toggle (Nav vs Details)
+
+// Mobile Menu Open
+if (mobileMenuBtn && sidebar && sidebarOverlay) {
+    mobileMenuBtn.addEventListener('click', () => {
+        sidebar.classList.add('open');
+        sidebarOverlay.classList.add('active');
+        
+        // Ensure Nav is visible on mobile open, not details
+        if (window.innerWidth <= 1000) {
+           sidebarNav.style.display = 'block';
+           // Update the toggle button icon to 'X' (Close)
+           navToggleBtn.innerHTML = `
+                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            `;
+        }
+    });
+}
+
+// Close on Overlay Click
+if (sidebarOverlay) {
+    sidebarOverlay.addEventListener('click', () => {
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('active');
+    });
+}
 
 if (navToggleBtn && sidebarNav && weatherDetailsPanel) {
     navToggleBtn.addEventListener('click', () => {
+        
+        // Mobile Specific Logic: Toggle Button acts as Close Button
+        if (window.innerWidth <= 1000) {
+            sidebar.classList.remove('open');
+            sidebarOverlay.classList.remove('active');
+            return; 
+        }
+
+        // Desktop Specific Logic: Toggle between Nav and Details
         isNavOpen = !isNavOpen;
         
         if (isNavOpen) {
@@ -419,12 +507,14 @@ function renderForecast(dailyData) {
         const item = document.createElement("div");
         item.className = "forecast-item";
         item.innerHTML = `
-            <div class="forecast-day-info">
-                <span class="forecast-day">${dayName}</span>
-                <span class="forecast-date">${day.dateStr}</span>
-            </div>
-            <div class="forecast-temp-main">
-                ${Math.round(day.temp.max)}° - ${Math.round(day.temp.min)}°
+            <div class="forecast-1300">
+                <div class="forecast-day-info">
+                    <span class="forecast-day">${dayName}</span>
+                    <span class="forecast-date">${day.dateStr}</span>
+                </div>
+                <div class="forecast-temp-main">
+                    ${Math.round(day.temp.min)}° - ${Math.round(day.temp.max)}°
+                </div>
             </div>
             <div class="forecast-icon">
                 <img src="assets/weatherIcons/${iconFile}" alt="${day.weather[0].main}">
@@ -510,6 +600,10 @@ saveLocationBtn.addEventListener("click", () => {
 
 // Navigation Logic
 const navItems = document.querySelectorAll('.nav-item');
+const weatherDetailsMobile = document.querySelector('.weather-details-panel-600');
+const rightPanel = document.querySelector('.right-panel');
+const divider = document.querySelector('.divider');
+const heartBtn = document.getElementById('save-location-btn');
 
 navItems.forEach(item => {
     item.addEventListener('click', () => {
@@ -522,10 +616,23 @@ navItems.forEach(item => {
         if (navText === 'Dashboard') {
             dashboardView.classList.remove('hidden');
             savedLocationsView.classList.add('hidden');
+            
+            // Show extra content
+            if(weatherDetailsMobile) weatherDetailsMobile.classList.remove('hidden');
+            if(rightPanel) rightPanel.classList.remove('hidden');
+            if(divider) divider.classList.remove('hidden');
+
             // Ensure search bar and heart are visible/enabled if needed
         } else if (navText === 'Saved Location') {
             dashboardView.classList.add('hidden');
             savedLocationsView.classList.remove('hidden');
+            
+            // Hide extra content
+            if(weatherDetailsMobile) weatherDetailsMobile.classList.add('hidden');
+            if(rightPanel) rightPanel.classList.add('hidden');
+            if(divider) divider.classList.add('hidden');
+            if(heartBtn) heartBtn.classList.add('hidden');
+            
             renderSavedLocations();
         }
     });
@@ -571,7 +678,7 @@ function renderSavedLocations() {
         card.addEventListener('click', () => {
             fetchWeatherData(loc.name);
             // Switch to dashboard
-            navItems[0].click(); // Simulate click on Dashboard
+            navItems[0].click();
         });
 
         savedGrid.appendChild(card);
@@ -614,7 +721,6 @@ function getLocalTime(offset, timezone) {
     }
     
     try {
-        // If we have the timezone string, we can use Intl.DateTimeFormat for maximum accuracy
         if (timezone) {
             return new Date().toLocaleTimeString('en-US', {
                 timeZone: timezone,
