@@ -1,3 +1,4 @@
+const API_KEY = "fe3ac2ffe1f482f352593c43d4a7cdbf";
 const DEFAULT_CITY = "Islamabad";
 
 // DOM Elements
@@ -70,10 +71,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function initApp() {
-    // 1. Immediately load the default city so the UI is not empty
-    fetchWeatherData(DEFAULT_CITY);
-
-    // 2. Ask for location permission and update if granted
     if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(
             async (position) => {
@@ -81,19 +78,18 @@ async function initApp() {
                 await fetchWeatherByCoords(latitude, longitude);
             },
             (error) => {
-                console.warn("Geolocation denied, timeout, or failed:", error.message);
-                // We already loaded the default city, so no fallback needed here
-            },
-            {
-                timeout: 10000 // 10 seconds timeout
+                console.warn("Geolocation denied or failed:", error.message);
+                fetchWeatherData(DEFAULT_CITY);
             }
         );
+    } else {
+        fetchWeatherData(DEFAULT_CITY);
     }
 }
 
 async function fetchWeatherByCoords(lat, lon) {
     try {
-        const geoRes = await fetch(`/.netlify/functions/api?endpoint=2.5/weather&lat=${lat}&lon=${lon}`);
+        const geoRes = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`);
         if (!geoRes.ok) throw new Error("Could not find location name");
         
         const geoData = await geoRes.json();
@@ -109,7 +105,7 @@ async function fetchWeatherByCoords(lat, lon) {
 async function fetchWeatherData(city) {
     try {
         // Get Coordinates
-        const geoRes = await fetch(`/.netlify/functions/api?endpoint=2.5/weather&q=${city}`);
+        const geoRes = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`);
         if (!geoRes.ok) {
             if (geoRes.status === 401) alert("API Key Error on Geo Lookup. Please check key.");
             else alert("City not found");
@@ -128,7 +124,7 @@ async function fetchWeatherData(city) {
 
 async function fetchFullWeatherData(lat, lon) {
     try {
-        const oneCallRes = await fetch(`/.netlify/functions/api?endpoint=3.0/onecall&lat=${lat}&lon=${lon}&exclude=minutely,alerts&units=metric`);
+        const oneCallRes = await fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely,alerts&units=metric&appid=${API_KEY}`);
         
         if (!oneCallRes.ok) {
             console.error("OneCall API Error:", oneCallRes.status);
