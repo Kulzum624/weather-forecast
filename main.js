@@ -1,4 +1,4 @@
-const DEFAULT_CITY = "Islamabad";
+const DEFAULT_CITY = "Sydney";
 
 // DOM Elements
 const searchInput = document.getElementById("search-input");
